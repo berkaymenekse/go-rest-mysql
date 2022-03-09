@@ -12,18 +12,18 @@ import (
 var db *sql.DB
 
 type Il struct {
-	ilno uint8
-	isim string
+	IlNo uint8
+	Isim string
 }
 
 type Ilce struct {
-	ilce_no uint8
-	isim    string
-	il_no   uint8
+	IlceNo uint8
+	Isim    string
+	IlNo   uint8
 }
 
 type Page struct {
-	title string
+	Title string
 }
 
 func createConnection() bool {
@@ -58,7 +58,7 @@ func getIller() ([]Il, error) {
 	defer rows.Close()
 	for rows.Next() {
 		var il Il
-		if err := rows.Scan(&il.ilno, &il.isim); err != nil {
+		if err := rows.Scan(&il.IlNo, &il.Isim); err != nil {
 			return nil, fmt.Errorf("Degerleri parse ederken bi problem oldu")
 		}
 		iller = append(iller, il)
@@ -68,13 +68,13 @@ func getIller() ([]Il, error) {
 
 func getIl(il_no uint8) (Il, error) {
 	var il Il
-	row := db.QueryRow("SELECT * FROM iller WHERE  il_no = ?", il_no)
+	row := db.QueryRow("SELECT * FROM iller WHERE  IlNo = ?", IlNo)
 
-	if err := row.Scan(&il.ilno, &il.isim); err != nil {
+	if err := row.Scan(&il.IlNo, &il.Isim); err != nil {
 		if err == sql.ErrNoRows {
-			return il, fmt.Errorf("boyle bir il yok %d", il_no)
+			return il, fmt.Errorf("boyle bir il yok %d", IlNo)
 		}
-		return il, fmt.Errorf("getIl %d: %v", il_no, err)
+		return il, fmt.Errorf("getIl %d: %v", IlNo, err)
 	}
 	return il, nil
 }
@@ -82,14 +82,14 @@ func getIl(il_no uint8) (Il, error) {
 func getIlceler(il_no uint8) ([]Ilce, error) {
 
 	var ilceler []Ilce
-	rows, err := db.Query("SELECT * FROM ilceler WHERE il_no = ?", il_no)
+	rows, err := db.Query("SELECT * FROM ilceler WHERE IlNo = ?", IlNo)
 	if err != nil {
 		return nil, fmt.Errorf("ilceler gelirken problem oldu")
 	}
 	defer rows.Close()
 	for rows.Next() {
 		var ilce Ilce
-		if err := rows.Scan(&ilce.ilce_no, &ilce.isim, &ilce.il_no); err != nil {
+		if err := rows.Scan(&ilce.IlceNo, &ilce.Isim, &ilce.IlNo); err != nil {
 			return nil, fmt.Errorf("Degerleri parse ederken bi problem oldu")
 		}
 		ilceler = append(ilceler, ilce)
